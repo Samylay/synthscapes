@@ -1,5 +1,7 @@
+using SynthScapes.Props;
 using SynthScapes.World;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace SynthScapes.Core
 {
@@ -59,6 +61,8 @@ namespace SynthScapes.Core
             var worldRoot = new GameObject("World");
             worldRoot.transform.SetParent(transform, false);
 
+            BuildHud();
+            GameSession.Reset();
             BuildStarterMap(worldRoot.transform);
 
             var player = BuildPlayer(worldRoot.transform);
@@ -94,14 +98,28 @@ namespace SynthScapes.Core
 
             CreateRaisedBlock(propsRoot.transform, "NorthBlock", new Vector2Int(0, 3), new Vector2(1.1f, 0.6f));
             CreateRaisedBlock(propsRoot.transform, "WestBlock", new Vector2Int(-3, 0), new Vector2(1.1f, 0.6f));
-            CreateRaisedBlock(propsRoot.transform, "EastBlock", new Vector2Int(3, -1), new Vector2(1.1f, 0.6f));
+            CreateRaisedBlock(propsRoot.transform, "CenterBlock", new Vector2Int(0, -1), new Vector2(1.1f, 0.6f));
+            CreateTerminal(propsRoot.transform);
+            CreateDoor(propsRoot.transform);
+            CreateExitZone(propsRoot.transform);
 
             var boundsRoot = new GameObject("Bounds");
             boundsRoot.transform.SetParent(parent, false);
             CreateBoundary(boundsRoot.transform, "NorthWall", new Vector2(0f, 3.45f), new Vector2(7.5f, 0.5f));
             CreateBoundary(boundsRoot.transform, "SouthWall", new Vector2(0f, -3.45f), new Vector2(7.5f, 0.5f));
             CreateBoundary(boundsRoot.transform, "WestWall", new Vector2(-5.4f, 0f), new Vector2(0.5f, 6.5f));
-            CreateBoundary(boundsRoot.transform, "EastWall", new Vector2(5.4f, 0f), new Vector2(0.5f, 6.5f));
+            CreateBoundary(boundsRoot.transform, "EastWallUpper", new Vector2(5.4f, 1.9f), new Vector2(0.5f, 2.7f));
+            CreateBoundary(boundsRoot.transform, "EastWallLower", new Vector2(5.4f, -2.1f), new Vector2(0.5f, 2.5f));
+        }
+
+        private static void BuildHud()
+        {
+            if (HudController.Instance != null)
+            {
+                return;
+            }
+
+            new GameObject("HudController").AddComponent<HudController>();
         }
 
         private void CreateRaisedBlock(Transform parent, string objectName, Vector2Int gridPosition, Vector2 colliderSize)
@@ -112,6 +130,63 @@ namespace SynthScapes.Core
             var collider = block.AddComponent<BoxCollider2D>();
             collider.size = colliderSize;
             collider.offset = new Vector2(0f, -0.1f);
+        }
+
+        private void CreateTerminal(Transform parent)
+        {
+            var terminal = CreateTile(parent, "Terminal", GridToWorld(-4, 1), _accentTileSprite, 5);
+            terminal.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            terminal.AddComponent<YSort>();
+            terminal.GetComponent<SpriteRenderer>().color = new Color(0.32f, 0.95f, 1f);
+
+            var collider = terminal.AddComponent<BoxCollider2D>();
+            collider.isTrigger = true;
+            collider.size = new Vector2(0.9f, 0.55f);
+            collider.offset = new Vector2(0f, -0.05f);
+
+            terminal.AddComponent<TerminalInteractable>();
+        }
+
+        private void CreateDoor(Transform parent)
+        {
+            var door = CreateTile(parent, "Door", new Vector3(4.95f, -0.2f, 0f), _raisedTileSprite, 8);
+            door.transform.localScale = new Vector3(0.95f, 1.35f, 1f);
+            door.AddComponent<YSort>();
+            door.GetComponent<SpriteRenderer>().color = new Color(0.95f, 0.45f, 0.4f);
+
+            var blocker = door.AddComponent<BoxCollider2D>();
+            blocker.size = new Vector2(0.75f, 1.6f);
+            blocker.offset = new Vector2(0f, -0.1f);
+
+            var interactionTrigger = door.AddComponent<BoxCollider2D>();
+            interactionTrigger.size = new Vector2(1.6f, 1.9f);
+            interactionTrigger.offset = new Vector2(0f, -0.1f);
+            interactionTrigger.isTrigger = true;
+
+            var interactable = door.AddComponent<LockedDoorInteractable>();
+            interactable.SetDoorCollider(blocker);
+        }
+
+        private static void CreateExitZone(Transform parent)
+        {
+            var marker = new GameObject("ExitMarker");
+            marker.transform.SetParent(parent, false);
+            marker.transform.localPosition = new Vector3(6.05f, -0.2f, 0f);
+
+            var renderer = marker.AddComponent<SpriteRenderer>();
+            renderer.sprite = Resources.Load<Sprite>(AccentSpritePath);
+            renderer.color = new Color(1f, 0.95f, 0.35f);
+            renderer.sortingOrder = 3;
+
+            var exit = new GameObject("ExitZone");
+            exit.transform.SetParent(parent, false);
+            exit.transform.localPosition = new Vector3(6.4f, -0.2f, 0f);
+
+            var collider = exit.AddComponent<BoxCollider2D>();
+            collider.size = new Vector2(1.6f, 2.2f);
+            collider.isTrigger = true;
+
+            exit.AddComponent<ExitZone>();
         }
 
         private GameObject CreateTile(Transform parent, string objectName, Vector3 position, Sprite sprite, int sortingOrder)
@@ -148,6 +223,16 @@ namespace SynthScapes.Core
             player.transform.position = spawnPoint.position;
             player.transform.rotation = Quaternion.identity;
             player.transform.localScale = Vector3.one;
+
+            var playerInput = player.GetComponent<PlayerInput>();
+            if (playerInput != null)
+            {
+                Destroy(playerInput);
+            }
+
+            var interactionTrigger = player.AddComponent<CircleCollider2D>();
+            interactionTrigger.isTrigger = true;
+            interactionTrigger.radius = 1.1f;
 
             if (player.GetComponent<YSort>() == null)
             {

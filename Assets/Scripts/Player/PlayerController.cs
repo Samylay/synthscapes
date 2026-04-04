@@ -1,6 +1,8 @@
-using UnityEngine.Serialization;
+using SynthScapes.Core;
+using SynthScapes.Props;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace SynthScapes.Player
 {
@@ -20,9 +22,11 @@ namespace SynthScapes.Player
         private Animator _animator;
         private InputAction _moveAction;
         private InputAction _sprintAction;
+        private InputAction _interactAction;
         private Vector2 _moveInput;
         private Vector2 _facing = Vector2.down;
         private bool _sprintHeld;
+        private InteractableBase _currentInteractable;
 
         private void Awake()
         {
@@ -49,12 +53,24 @@ namespace SynthScapes.Player
             _sprintAction.AddBinding("<Keyboard>/leftShift");
             _sprintAction.AddBinding("<Gamepad>/leftStickPress");
 
+            _interactAction = map.AddAction("Interact", InputActionType.Button);
+            _interactAction.AddBinding("<Keyboard>/e");
+            _interactAction.AddBinding("<Gamepad>/buttonWest");
+
             map.Enable();
         }
 
         private void OnDestroy()
         {
             _moveAction?.actionMap?.Disable();
+        }
+
+        private void Update()
+        {
+            if (_interactAction.WasPressedThisFrame() && _currentInteractable != null)
+            {
+                _currentInteractable.Interact(this);
+            }
         }
 
         private void FixedUpdate()
@@ -92,6 +108,36 @@ namespace SynthScapes.Player
         private void OnSprint(InputValue value)
         {
             _sprintHeld = value.isPressed;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var interactable = other.GetComponent<InteractableBase>();
+            if (interactable == null)
+            {
+                return;
+            }
+
+            _currentInteractable = interactable;
+            if (HudController.Instance != null)
+            {
+                HudController.Instance.ShowPrompt(interactable.PromptText);
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            var interactable = other.GetComponent<InteractableBase>();
+            if (interactable == null || interactable != _currentInteractable)
+            {
+                return;
+            }
+
+            _currentInteractable = null;
+            if (HudController.Instance != null)
+            {
+                HudController.Instance.HidePrompt();
+            }
         }
 
         private void UpdateFacing(Vector2 input)
