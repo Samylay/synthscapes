@@ -1,31 +1,26 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
-[Uu]ser[Ss]ettings/
-
-MemoryCaptures/
-Recordings/
-
-*.csproj
-*.unityproj
-*.sln
-*.suo
+# Godot 4
+.godot/
 *.tmp
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.pdb
-*.mdb
-*.opendb
-*.VC.db
 
+# Export
+export_presets.cfg
+*.export/
+
+# Mono/C#
+.mono/
+data_*/
+mono_crash.*.json
+
+# IDE
 .vs/
 .vscode/
-.codex
+.idea/
+*.code-workspace
 
-sysinfo.txt
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+.codex
+tmp/

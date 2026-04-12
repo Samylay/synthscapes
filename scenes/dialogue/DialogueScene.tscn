@@ -1,0 +1,154 @@
+[gd_scene format=4 uid="uid://dialoguescene001"]
+
+[ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player/Player.tscn" id="1_player"]
+[ext_resource type="Script" path="res://scripts/world/DialogueScene.gd" id="2_scenegd"]
+[ext_resource type="Texture2D" uid="uid://dwuk7l78otly6" path="res://assets/tiles/placeholder_iso.png" id="3_tiles"]
+[ext_resource type="Script" path="res://scripts/world/props/NpcDialogueInteractable.gd" id="4_npc"]
+[ext_resource type="Script" path="res://scripts/world/props/DialogueGate.gd" id="5_gate"]
+[ext_resource type="Script" path="res://scripts/world/props/ExitZone.gd" id="6_exit"]
+[ext_resource type="PackedScene" uid="uid://hud001" path="res://scenes/ui/HUD.tscn" id="7_hud"]
+[ext_resource type="Script" path="res://scripts/dialogue/DialogueManager.gd" id="8_dm"]
+[ext_resource type="Script" path="res://scripts/world/NeonLight.gd" id="9_neon"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ground"]
+texture = ExtResource("3_tiles")
+texture_region_size = Vector2i(64, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_walls"]
+texture = ExtResource("3_tiles")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -16, 0, -32, 32, -16, 0, 0)
+
+[sub_resource type="TileSet" id="TileSet_1"]
+tile_shape = 1
+tile_layout = 1
+tile_offset_axis = 1
+tile_size = Vector2i(64, 32)
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 1
+sources/0 = SubResource("TileSetAtlasSource_ground")
+sources/1 = SubResource("TileSetAtlasSource_walls")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_npc"]
+radius = 24.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc_body"]
+size = Vector2(16, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate_body"]
+size = Vector2(80, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(96, 48)
+
+[node name="DialogueScene" type="Node2D"]
+script = ExtResource("2_scenegd")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("9v8AAAAAAAAAAAAA9/8AAAAAAAAAAAAA+P8AAAAAAAAAAAAA+f8AAAAAAAAAAAAA+v8AAAAAAAAAAAAA+/8AAAAAAAAAAAAA/P8AAAAAAAAAAAAA/f8AAAAAAAAAAAAA/v8AAAAAAAAAAAAA//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAwAAAAAAAAAAAAAABAAAAAAAAAAAAAAABQAAAAAAAAAAAAAABgAAAAAAAAAAAAAABwAAAAAAAAAAAAAACAAAAAAAAAAAAAAACQAAAAAAAAAAAAAACgAAAAAAAAAAAAAA9v8BAAAAAAAAAAAA9/8BAAAAAAAAAAAA+P8BAAAAAAAAAAAA+f8BAAAAAAAAAAAA+v8BAAAAAAAAAAAA+/8BAAAAAAAAAAAA/P8BAAAAAAAAAAAA/f8BAAAAAAAAAAAA/v8BAAAAAAAAAAAA//8BAAAAAAAAAAAAAAABAAAAAAAAAAAAAQABAAAAAAAAAAAAAgABAAAAAAAAAAAAAwABAAAAAAAAAAAABAABAAAAAAAAAAAABQABAAAAAAAAAAAABgABAAAAAAAAAAAABwABAAAAAAAAAAAACAABAAAAAAAAAAAACQABAAAAAAAAAAAACgABAAAAAAAAAAAA9v8CAAAAAAAAAAAA9/8CAAAAAAAAAAAA+P8CAAAAAAAAAAAA+f8CAAAAAAAAAAAA+v8CAAAAAAAAAAAA+/8CAAAAAAAAAAAA/P8CAAAAAAAAAAAA/f8CAAAAAAAAAAAA/v8CAAAAAAAAAAAA//8CAAAAAAAAAAAAAAACAAAAAAAAAAAAAgACAAAAAAAAAAAAAwACAAAAAAAAAAAABAACAAAAAAAAAAAABQACAAAAAAAAAAAABgACAAAAAAAAAAAABwACAAAAAAAAAAAACAACAAAAAAAAAAAACQACAAAAAAAAAAAACgACAAAAAAAAAAAA9v8DAAAAAAAAAAAA9/8DAAAAAAAAAAAA+P8DAAAAAAAAAAAA+f8DAAAAAAAAAAAA+v8DAAAAAAAAAAAA+/8DAAAAAAAAAAAA/P8DAAAAAAAAAAAA/f8DAAAAAAAAAAAA/v8DAAAAAAAAAAAA//8DAAAAAAAAAAAAAAADAAAAAAAAAAAAAQADAAAAAAAAAAAAAgADAAAAAAAAAAAAAwADAAAAAAAAAAAABAADAAAAAAAAAAAABQADAAAAAAAAAAAABgADAAAAAAAAAAAABwADAAAAAAAAAAAACAADAAAAAAAAAAAACQADAAAAAAAAAAAACgADAAAAAAAAAAAA9v8EAAAAAAAAAAAA9/8EAAAAAAAAAAAA+P8EAAAAAAAAAAAA+f8EAAAAAAAAAAAA+v8EAAAAAAAAAAAA+/8EAAAAAAAAAAAA/P8EAAAAAAAAAAAA/f8EAAAAAAAAAAAA/v8EAAAAAAAAAAAA//8EAAAAAAAAAAAAAAAEAAAAAAAAAAAAAQAEAAAAAAAAAAAAAgAEAAAAAAAAAAAAAwAEAAAAAAAAAAAABAAEAAAAAAAAAAAABQAEAAAAAAAAAAAABgAEAAAAAAAAAAAABwAEAAAAAAAAAAAACAAEAAAAAAAAAAAACQAEAAAAAAAAAAAACgAEAAAAAAAAAAAA9v8FAAAAAAAAAAAA9/8FAAAAAAAAAAAA+P8FAAAAAAAAAAAA+f8FAAAAAAAAAAAA+v8FAAAAAAAAAAAA+/8FAAAAAAAAAAAA/P8FAAAAAAAAAAAA/f8FAAAAAAAAAAAA/v8FAAAAAAAAAAAA//8FAAAAAAAAAAAAAAAFAAAAAAAAAAAAAQAFAAAAAAAAAAAAAgAFAAAAAAAAAAAAAwAFAAAAAAAAAAAABAAFAAAAAAAAAAAABQAFAAAAAAAAAAAABgAFAAAAAAAAAAAABwAFAAAAAAAAAAAACAAFAAAAAAAAAAAACQAFAAAAAAAAAAAACgAFAAAAAAAAAAAA9v8GAAAAAAAAAAAA9/8GAAAAAAAAAAAA+P8GAAAAAAAAAAAA+f8GAAAAAAAAAAAA+v8GAAAAAAAAAAAA+/8GAAAAAAAAAAAA/P8GAAAAAAAAAAAA/f8GAAAAAAAAAAAA/v8GAAAAAAAAAAAA//8GAAAAAAAAAAAAAAAGAAAAAAAAAAAAAQAGAAAAAAAAAAAAAgAGAAAAAAAAAAAAAwAGAAAAAAAAAAAABAAGAAAAAAAAAAAABQAGAAAAAAAAAAAABgAGAAAAAAAAAAAABwAGAAAAAAAAAAAACAAGAAAAAAAAAAAACQAGAAAAAAAAAAAACgAGAAAAAAAAAAAA9v8HAAAAAAAAAAAA9/8HAAAAAAAAAAAA+P8HAAAAAAAAAAAA+f8HAAAAAAAAAAAA+v8HAAAAAAAAAAAA+/8HAAAAAAAAAAAA/P8HAAAAAAAAAAAA/f8HAAAAAAAAAAAA/v8HAAAAAAAAAAAA//8HAAAAAAAAAAAAAAAHAAAAAAAAAAAAAQAHAAAAAAAAAAAAAgAHAAAAAAAAAAAAAwAHAAAAAAAAAAAABAAHAAAAAAAAAAAABQAHAAAAAAAAAAAABgAHAAAAAAAAAAAABwAHAAAAAAAAAAAACAAHAAAAAAAAAAAACQAHAAAAAAAAAAAACgAHAAAAAAAAAAAA9v8IAAAAAAAAAAAA9/8IAAAAAAAAAAAA+P8IAAAAAAAAAAAA+f8IAAAAAAAAAAAA+v8IAAAAAAAAAAAA+/8IAAAAAAAAAAAA/P8IAAAAAAAAAAAA/f8IAAAAAAAAAAAA/v8IAAAAAAAAAAAA//8IAAAAAAAAAAAAAAAIAAAAAAAAAAAAAQAIAAAAAAAAAAAAAgAIAAAAAAAAAAAAAwAIAAAAAAAAAAAABAAIAAAAAAAAAAAABQAIAAAAAAAAAAAABgAIAAAAAAAAAAAABwAIAAAAAAAAAAAACAAIAAAAAAAAAAAACQAIAAAAAAAAAAAACgAIAAAAAAAAAAAA")
+tile_set = SubResource("TileSet_1")
+
+[node name="YSortables" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Walls" type="TileMapLayer" parent="YSortables"]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("9v8AAAEAAAAAAAAA9v8BAAEAAAAAAAAA9v8CAAEAAAAAAAAA9v8DAAEAAAAAAAAA9v8EAAEAAAAAAAAA9v8FAAEAAAAAAAAA9v8GAAEAAAAAAAAA9v8HAAEAAAAAAAAA9v8IAAEAAAAAAAAA9/8AAAEAAAAAAAAA9/8IAAEAAAAAAAAA+P8AAAEAAAAAAAAA+P8IAAEAAAAAAAAA+f8AAAEAAAAAAAAA+f8IAAEAAAAAAAAA+v8AAAEAAAAAAAAA+v8IAAEAAAAAAAAA+/8AAAEAAAAAAAAA+/8IAAEAAAAAAAAA/P8AAAEAAAAAAAAA/P8IAAEAAAAAAAAA/f8AAAEAAAAAAAAA/f8IAAEAAAAAAAAA/v8AAAEAAAAAAAAA/v8IAAEAAAAAAAAA//8AAAEAAAAAAAAA//8IAAEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAIAAEAAAAAAAAAAAAgAAEAAAAAAAAAAgAAAAEAAAAAAAAAAgAIAAEAAAAAAAAAAwAAAAEAAAAAAAAAAwAIAAEAAAAAAAAABAAAAAEAAAAAAAAABAAIAAEAAAAAAAAABQAAAAEAAAAAAAAABQAIAAEAAAAAAAAABgAAAAEAAAAAAAAABgAIAAEAAAAAAAAABwAAAAEAAAAAAAAABwAIAAEAAAAAAAAACAAIAAEAAAAAAAAACQAAAAEAAAAAAAAACQAIAAEAAAAAAAAACgAAAAEAAAAAAAAACgABAAEAAAAAAAAACgACAAEAAAAAAAAACgADAAEAAAAAAAAACgAEAAEAAAAAAAAACgAFAAEAAAAAAAAACgAGAAEAAAAAAAAACgAHAAEAAAAAAAAACgAIAAEAAAAAAAAA")
+tile_set = SubResource("TileSet_1")
+
+[node name="Player" parent="YSortables" instance=ExtResource("1_player")]
+
+[node name="Archivist" type="Node2D" parent="YSortables"]
+position = Vector2(0, -80)
+script = ExtResource("4_npc")
+
+[node name="Sprite2D" type="Sprite2D" parent="YSortables/Archivist"]
+texture = ExtResource("3_tiles")
+modulate = Color(0.82, 0.73, 1, 1)
+texture_filter = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+scale = Vector2(0.95, 1.25)
+
+[node name="InteractionZone" type="Area2D" parent="YSortables/Archivist"]
+collision_layer = 1
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortables/Archivist/InteractionZone"]
+shape = SubResource("CircleShape2D_npc")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="YSortables/Archivist"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortables/Archivist/StaticBody2D"]
+shape = SubResource("RectangleShape2D_npc_body")
+
+[node name="NorthGate" type="Node2D" parent="YSortables"]
+position = Vector2(0, -192)
+script = ExtResource("5_gate")
+
+[node name="Sprite2D" type="Sprite2D" parent="YSortables/NorthGate"]
+texture = ExtResource("3_tiles")
+modulate = Color(0.92, 0.55, 0.35, 1)
+texture_filter = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+scale = Vector2(1.3, 1.2)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="YSortables/NorthGate"]
+collision_layer = 1
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSortables/NorthGate/StaticBody2D"]
+shape = SubResource("RectangleShape2D_gate_body")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(0, 128)
+
+[node name="ExitZone" type="Area2D" parent="."]
+position = Vector2(0, -240)
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("6_exit")
+next_scene_path = "res://scenes/ui/EndScreen.tscn"
+requirement = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitZone"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="NeonLightCyan" type="PointLight2D" parent="."]
+position = Vector2(-160, -48)
+color = Color(0, 0.9, 0.85, 1)
+energy = 0.6
+script = ExtResource("9_neon")
+light_radius = 128.0
+
+[node name="NeonLightViolet" type="PointLight2D" parent="."]
+position = Vector2(160, -48)
+color = Color(0.6, 0.1, 0.9, 1)
+energy = 0.6
+script = ExtResource("9_neon")
+light_radius = 128.0
+
+[node name="DialogueManagerNode" type="Node" parent="." groups=["dialogue_manager"]]
+script = ExtResource("8_dm")
+
+[node name="HUD" parent="." instance=ExtResource("7_hud")]
+
+[node name="FeedbackCanvas" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="FeedbackPanel" type="PanelContainer" parent="FeedbackCanvas"]
+visible = false
+offset_left = 170.0
+offset_top = 300.0
+offset_right = 470.0
+offset_bottom = 340.0
+
+[node name="FeedbackLabel" type="Label" parent="FeedbackCanvas/FeedbackPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""

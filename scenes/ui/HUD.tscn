@@ -1,0 +1,102 @@
+[gd_scene format=4 uid="uid://hud001"]
+
+[ext_resource type="Script" path="res://scripts/ui/HudController.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer" groups=["hud"]]
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="ObjectiveLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 360.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+theme_override_font_sizes/font_size = 10
+text = ""
+
+[node name="PromptLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -24.0
+offset_right = 80.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "Press E"
+horizontal_alignment = 1
+
+[node name="FeedbackLabel" type="Label" parent="."]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = -160.0
+offset_top = 4.0
+offset_right = 160.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.83, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = ""
+horizontal_alignment = 1
+
+[node name="DialoguePanel" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -120.0
+offset_right = 280.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = null
+
+[node name="DialogueBG" type="ColorRect" parent="DialoguePanel"]
+layout_mode = 2
+color = Color(0.08, 0.1, 0.15, 0.95)
+
+[node name="VBox" type="VBoxContainer" parent="DialoguePanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SpeakerLabel" type="Label" parent="DialoguePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = ""
+
+[node name="DialogueLabel" type="Label" parent="DialoguePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = ""
+autowrap_mode = 2
+
+[node name="ChoicesLabel" type="Label" parent="DialoguePanel/VBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.76, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = ""
+autowrap_mode = 2
+
+[node name="HintLabel" type="Label" parent="DialoguePanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.82, 0.92, 0.7)
+theme_override_font_sizes/font_size = 8
+text = ""
+horizontal_alignment = 2
