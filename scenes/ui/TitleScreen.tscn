@@ -65,6 +65,7 @@ custom_minimum_size = Vector2(0, 20)
 
 [node name="StartButton" type="Button" parent="VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(200, 28)
 theme_override_colors/font_color = Color(0, 0.9, 0.85, 1)
 theme_override_colors/font_hover_color = Color(0.8, 0.1, 0.9, 1)
 theme_override_font_sizes/font_size = 12
@@ -72,6 +73,7 @@ text = "START"
 
 [node name="QuitButton" type="Button" parent="VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(200, 28)
 theme_override_colors/font_color = Color(0.6, 0.6, 0.7, 0.8)
 theme_override_colors/font_hover_color = Color(0.8, 0.1, 0.9, 1)
 theme_override_font_sizes/font_size = 12
