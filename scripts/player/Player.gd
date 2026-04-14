@@ -54,12 +54,8 @@ func _physics_process(_delta: float) -> void:
 
 	if input != Vector2.ZERO:
 		input = input.normalized()
-		var iso := Vector2(
-			(input.x - input.y),
-			(input.x + input.y) * 0.5
-		)
 		var speed := SPRINT_SPEED if Input.is_action_pressed("sprint") else SPEED
-		velocity = iso * speed
+		velocity = input * speed
 	else:
 		velocity = Vector2.ZERO
 

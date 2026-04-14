@@ -1,3 +1,4 @@
+@tool
 extends Node2D
 
 @onready var _feedback_label: Label = $FeedbackCanvas/FeedbackPanel/FeedbackLabel
@@ -6,9 +7,20 @@ extends Node2D
 @export var ambient_music: AudioStream
 @export var ambient_loop: AudioStream
 
+@export_tool_button("Build Map in Editor") var _build_map_button := _editor_build_map
+
+func _editor_build_map() -> void:
+	if not Engine.is_editor_hint():
+		return
+	Level1Builder.build($Ground, $YSortables/Walls)
+	print("Level 1 map built — save the scene to persist.")
+
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	GameState.reset()
+	Level1Builder.build($Ground, $YSortables/Walls)
 	_setup_camera_limits()
 	_place_player_at_spawn()
 	_connect_resolution_zone()
@@ -42,7 +54,7 @@ func _on_resolution_zone_entered(body: Node2D) -> void:
 		EventBus.resolution_zone_entered.emit()
 
 
-func _on_prop_interaction(prop_name: String, prop_data: Dictionary) -> void:
+func _on_prop_interaction(_prop_name: String, prop_data: Dictionary) -> void:
 	if "message" in prop_data:
 		_feedback_label.text = prop_data["message"]
 		_feedback_panel.visible = true
