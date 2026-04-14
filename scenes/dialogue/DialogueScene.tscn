@@ -8,7 +8,6 @@
 [ext_resource type="Script" path="res://scripts/world/props/ExitZone.gd" id="6_exit"]
 [ext_resource type="PackedScene" uid="uid://hud001" path="res://scenes/ui/HUD.tscn" id="7_hud"]
 [ext_resource type="Script" path="res://scripts/dialogue/DialogueManager.gd" id="8_dm"]
-[ext_resource type="Script" path="res://scripts/world/NeonLight.gd" id="9_neon"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ground"]
 texture = ExtResource("3_tiles")
@@ -118,20 +117,6 @@ requirement = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitZone"]
 shape = SubResource("RectangleShape2D_exit")
-
-[node name="NeonLightCyan" type="PointLight2D" parent="."]
-position = Vector2(-160, -48)
-color = Color(0, 0.9, 0.85, 1)
-energy = 0.6
-script = ExtResource("9_neon")
-light_radius = 128.0
-
-[node name="NeonLightViolet" type="PointLight2D" parent="."]
-position = Vector2(160, -48)
-color = Color(0.6, 0.1, 0.9, 1)
-energy = 0.6
-script = ExtResource("9_neon")
-light_radius = 128.0
 
 [node name="DialogueManagerNode" type="Node" parent="." groups=["dialogue_manager"]]
 script = ExtResource("8_dm")

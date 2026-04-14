@@ -7,6 +7,7 @@ extends Node2D
 @export var ambient_music: AudioStream
 @export var ambient_loop: AudioStream
 
+@warning_ignore("unused_private_class_variable")
 @export_tool_button("Build Map in Editor") var _build_map_button := _editor_build_map
 
 func _editor_build_map() -> void:
