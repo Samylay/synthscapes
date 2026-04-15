@@ -25,7 +25,7 @@ func _process(delta: float) -> void:
 
 func _on_start() -> void:
 	GameState.reset()
-	SceneManager.change_scene("res://scenes/world/World.tscn")
+	SceneManager.change_scene("res://scenes/world/ApartmentScene.tscn")
 
 
 func _on_quit() -> void:

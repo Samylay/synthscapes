@@ -1,8 +1,8 @@
-[gd_scene format=4 uid="uid://titlescreen001"]
+[gd_scene format=3 uid="uid://bnnb3sfsxh3xs"]
 
-[ext_resource type="Script" path="res://scripts/ui/TitleScreen.gd" id="1_title"]
+[ext_resource type="Script" uid="uid://b8v48fv8f3dqs" path="res://scripts/ui/TitleScreen.gd" id="1_title"]
 
-[node name="TitleScreen" type="Control"]
+[node name="TitleScreen" type="Control" unique_id=1249158078]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_title")
 
-[node name="BG" type="ColorRect" parent="."]
+[node name="BG" type="ColorRect" parent="." unique_id=961301185]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.04, 0.04, 0.08, 1)
 
-[node name="NeonOverlay" type="ColorRect" parent="."]
+[node name="NeonOverlay" type="ColorRect" parent="." unique_id=973088215]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,7 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.8, 0.1, 0.3, 0.08)
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="VBox" type="VBoxContainer" parent="." unique_id=213570283]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -45,35 +45,35 @@ grow_vertical = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="VBox"]
+[node name="TitleLabel" type="Label" parent="VBox" unique_id=603024441]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.15, 0.35, 1)
 theme_override_font_sizes/font_size = 24
 text = "SYNTHSCAPES"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="VBox"]
+[node name="SubtitleLabel" type="Label" parent="VBox" unique_id=961525402]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.9, 0.85, 0.7)
 theme_override_font_sizes/font_size = 10
 text = "Secrets in the Digital Shadows"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="VBox"]
-layout_mode = 2
+[node name="Spacer" type="Control" parent="VBox" unique_id=80770556]
 custom_minimum_size = Vector2(0, 20)
-
-[node name="StartButton" type="Button" parent="VBox"]
 layout_mode = 2
+
+[node name="StartButton" type="Button" parent="VBox" unique_id=361305312]
 custom_minimum_size = Vector2(200, 28)
+layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.9, 0.85, 1)
 theme_override_colors/font_hover_color = Color(0.8, 0.1, 0.9, 1)
 theme_override_font_sizes/font_size = 12
 text = "START"
 
-[node name="QuitButton" type="Button" parent="VBox"]
-layout_mode = 2
+[node name="QuitButton" type="Button" parent="VBox" unique_id=864081060]
 custom_minimum_size = Vector2(200, 28)
+layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.7, 0.8)
 theme_override_colors/font_hover_color = Color(0.8, 0.1, 0.9, 1)
 theme_override_font_sizes/font_size = 12
