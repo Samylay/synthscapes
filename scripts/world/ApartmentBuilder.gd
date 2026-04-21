@@ -17,10 +17,20 @@ const CORNER_SW := 8
 const WINDOW    := 9
 const BLOCK     := 10
 const FENCE     := 11
+const FLOOR_B   := 12
+const FLOOR_C   := 13
+const FLOOR_D   := 14
+const FLOOR_E   := 15
+const WALL_N2   := 16
 
 const TILE_ATLAS := {
 	FLOOR:     Vector2i(0, 4),
+	FLOOR_B:   Vector2i(1, 4),
+	FLOOR_C:   Vector2i(2, 4),
+	FLOOR_D:   Vector2i(0, 5),
+	FLOOR_E:   Vector2i(1, 5),
 	WALL_N:    Vector2i(1, 0),
+	WALL_N2:   Vector2i(2, 0),
 	WALL_S:    Vector2i(1, 2),
 	WALL_E:    Vector2i(1, 1),
 	WALL_W:    Vector2i(2, 1),
@@ -32,6 +42,17 @@ const TILE_ATLAS := {
 	BLOCK:     Vector2i(2, 2),
 	FENCE:     Vector2i(3, 1),
 }
+
+# Deterministic floor variation — avoid pure noise (gives readable patterns).
+static func _floor_tile(col: int, row: int) -> int:
+	var h: int = col * 2654435761 ^ row * 2246822519
+	h = (h ^ (h >> 16)) & 0x7FFFFFFF
+	match h % 10:
+		0: return FLOOR_B
+		1: return FLOOR_C
+		2: return FLOOR_D
+		3: return FLOOR_E
+		_: return FLOOR
 
 # Apartment room: 40 cols × 22 rows.
 # Doorway (broken by Scrubbers) on left wall, rows 10-12.
@@ -66,10 +87,10 @@ static func build(ground: TileMapLayer, walls: TileMapLayer) -> void:
 	ground.clear()
 	walls.clear()
 
-	# --- Ground layer: fill interior with floor ---
+	# --- Ground layer: fill interior with varied floor ---
 	for row in range(1, ROWS - 1):
 		for col in range(1, COLS - 1):
-			ground.set_cell(Vector2i(col, row), 0, TILE_ATLAS[FLOOR])
+			ground.set_cell(Vector2i(col, row), 0, TILE_ATLAS[_floor_tile(col, row)])
 
 	# --- Walls layer ---
 
@@ -79,9 +100,15 @@ static func build(ground: TileMapLayer, walls: TileMapLayer) -> void:
 	walls.set_cell(Vector2i(0, ROWS - 1),   0, TILE_ATLAS[CORNER_SW])
 	walls.set_cell(Vector2i(COLS-1, ROWS-1),0, TILE_ATLAS[CORNER_SE])
 
-	# North wall (top): windows at WIN_COLS, walls elsewhere
+	# North wall (top): windows at WIN_COLS, alternate wall tile every 3 cols elsewhere
 	for col in range(1, COLS - 1):
-		var t := WINDOW if col in WIN_COLS else WALL_N
+		var t: int
+		if col in WIN_COLS:
+			t = WINDOW
+		elif col % 3 == 0:
+			t = WALL_N2
+		else:
+			t = WALL_N
 		walls.set_cell(Vector2i(col, 0), 0, TILE_ATLAS[t])
 
 	# South wall (bottom)

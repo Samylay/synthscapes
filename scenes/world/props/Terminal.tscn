@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://prop_terminal"]
 
 [ext_resource type="Script" path="res://scripts/world/props/Terminal.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://dwuk7l78otly6" path="res://assets/tiles/placeholder_iso.png" id="2_texture"]
+[ext_resource type="Texture2D" uid="uid://dcvtlxiyotgug" path="res://assets/tiles/pixel-cyberpunk-interior.png" id="2_texture"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_zone"]
 radius = 24.0
@@ -14,10 +14,9 @@ script = ExtResource("1_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_texture")
-modulate = Color(0, 1, 0, 1)
 texture_filter = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 64, 64)
+region_rect = Rect2(146, 81, 127, 47)
 
 [node name="InteractionZone" type="Area2D" parent="."]
 collision_layer = 1

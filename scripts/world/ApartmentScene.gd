@@ -1,11 +1,12 @@
-# Scene 1 — Kaï's apartment. Level 1: "Le contrat".
-# Auto-launched cutscene → player choice → transition to World.
+# Scene 1 — Kaï's apartment. Cutscene → player choice → gameplay in same map.
 @tool
 extends Node2D
 
 @onready var _dialogue_manager: Node = $DialogueManagerNode
 @onready var _npc: Node = $CutsceneNPC
 @onready var _hud: Node = $HUD
+@onready var _feedback_label: Label = $FeedbackCanvas/FeedbackPanel/FeedbackLabel
+@onready var _feedback_panel: PanelContainer = $FeedbackCanvas/FeedbackPanel
 
 @warning_ignore("unused_private_class_variable")
 @export_tool_button("Build Apartment Map in Editor") var _build_btn := _editor_build_map
@@ -92,24 +93,61 @@ func _ready() -> void:
 			"escape_force", "Kaï",
 			"[Kaï dégaine son arme. Une fuite par la force — brutale et sanglante.]",
 			DialogueModels.PortraitSide.LEFT, "",
-			_go_to_world_force
+			_enter_play_mode_force
 		),
 		DialogueModels.DialogueNode.new(
 			"escape_ruse", "Kaï",
 			"[Kaï surcharge le fauteuil d'immersion. L'IEM aveugle les drones. Fuite furtive par les conduits d'aération.]",
 			DialogueModels.PortraitSide.LEFT, "",
-			_go_to_world_ruse
+			_enter_play_mode_ruse
 		),
 	])
 	await get_tree().process_frame
 	_dialogue_manager.start_conversation(_npc, _hud)
 
 
-func _go_to_world_force() -> void:
+func _enter_play_mode_force() -> void:
 	GameState.set_flag("escape_method", "force")
-	SceneManager.call_deferred("change_scene", "res://scenes/world/World.tscn")
+	_enter_play_mode()
 
 
-func _go_to_world_ruse() -> void:
+func _enter_play_mode_ruse() -> void:
 	GameState.set_flag("escape_method", "ruse")
-	SceneManager.call_deferred("change_scene", "res://scenes/world/World.tscn")
+	_enter_play_mode()
+
+
+func _enter_play_mode() -> void:
+	var player: Node2D = $Player
+	player.global_position = $SpawnPoint.global_position
+	player.visible = true
+	player.process_mode = Node.PROCESS_MODE_INHERIT
+	_setup_camera_limits()
+	$ResolutionZone.body_entered.connect(_on_resolution_zone_entered)
+	EventBus.prop_interaction_completed.connect(_on_prop_interaction)
+
+
+func _setup_camera_limits() -> void:
+	var ground: TileMapLayer = $Ground
+	var rect: Rect2i = ground.get_used_rect()
+	if rect.size == Vector2i.ZERO:
+		return
+	var ts: Vector2i = ground.tile_set.tile_size
+	var cam: Camera2D = $Player/Camera2D
+	cam.limit_left   = rect.position.x * ts.x
+	cam.limit_top    = rect.position.y * ts.y
+	cam.limit_right  = rect.end.x * ts.x
+	cam.limit_bottom = rect.end.y * ts.y
+
+
+func _on_resolution_zone_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		EventBus.resolution_zone_entered.emit()
+
+
+func _on_prop_interaction(_prop_name: String, prop_data: Dictionary) -> void:
+	if "message" in prop_data:
+		_feedback_label.text = prop_data["message"]
+		_feedback_panel.visible = true
+		var tween := create_tween()
+		tween.tween_interval(3.0)
+		tween.tween_callback(_feedback_panel.set.bind("visible", false))

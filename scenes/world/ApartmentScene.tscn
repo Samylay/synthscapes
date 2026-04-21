@@ -5,6 +5,11 @@
 [ext_resource type="Script" path="res://scripts/dialogue/DialogueManager.gd" id="3_dm"]
 [ext_resource type="Script" path="res://scripts/world/CutsceneNPC.gd" id="4_npc"]
 [ext_resource type="Texture2D" uid="uid://dcvtlxiyotgug" path="res://assets/tiles/pixel-cyberpunk-interior.png" id="5_tiles"]
+[ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player/Player.tscn" id="6_player"]
+[ext_resource type="PackedScene" path="res://scenes/world/props/PropagandaScreen.tscn" id="7_propaganda"]
+[ext_resource type="PackedScene" uid="uid://prop_lockeddoor" path="res://scenes/world/props/LockedDoor.tscn" id="8_lockeddoor"]
+[ext_resource type="PackedScene" uid="uid://prop_terminal" path="res://scenes/world/props/Terminal.tscn" id="9_terminal_prop"]
+[ext_resource type="Script" uid="uid://esk6a3cf7s05" path="res://scripts/world/props/ExitZone.gd" id="10_exit"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_apt"]
 texture = ExtResource("5_tiles")
@@ -25,10 +30,23 @@ texture = ExtResource("5_tiles")
 2:3/0 = 0
 3:3/0 = 0
 0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_apt"]
 tile_size = Vector2i(16, 16)
 sources/0 = SubResource("TileSetAtlasSource_apt")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_res"]
+size = Vector2(128, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit"]
+size = Vector2(80, 48)
 
 [node name="ApartmentScene" type="Node2D"]
 script = ExtResource("1_script")
@@ -52,12 +70,6 @@ texture = ExtResource("5_tiles")
 region_enabled = true
 region_rect = Rect2(330, 300, 46, 35)
 
-[node name="Terminal" type="Sprite2D" parent="Props"]
-position = Vector2(512, 96)
-texture = ExtResource("5_tiles")
-region_enabled = true
-region_rect = Rect2(146, 81, 127, 47)
-
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
 
 [node name="DialogueManagerNode" type="Node" parent="." groups=["dialogue_manager"]]
@@ -65,3 +77,51 @@ script = ExtResource("3_dm")
 
 [node name="CutsceneNPC" type="Node" parent="."]
 script = ExtResource("4_npc")
+
+[node name="Player" parent="." instance=ExtResource("6_player")]
+visible = false
+process_mode = 4
+position = Vector2(320, 176)
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(320, 176)
+
+[node name="LockedDoor" parent="." instance=ExtResource("8_lockeddoor")]
+position = Vector2(16, 176)
+
+[node name="TerminalProp" parent="." instance=ExtResource("9_terminal_prop")]
+position = Vector2(512, 96)
+
+[node name="PropagandaScreen" parent="." instance=ExtResource("7_propaganda")]
+position = Vector2(580, 176)
+
+[node name="ResolutionZone" type="Area2D" parent="."]
+position = Vector2(16, 176)
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ResolutionZone"]
+shape = SubResource("RectangleShape2D_res")
+
+[node name="ExitZone" type="Area2D" parent="."]
+position = Vector2(16, 176)
+collision_layer = 4
+script = ExtResource("10_exit")
+next_scene_path = "res://scenes/dialogue/DialogueScene.tscn"
+requirement = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitZone"]
+shape = SubResource("RectangleShape2D_exit")
+
+[node name="FeedbackCanvas" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="FeedbackPanel" type="PanelContainer" parent="FeedbackCanvas"]
+visible = false
+offset_left = 170.0
+offset_top = 300.0
+offset_right = 470.0
+offset_bottom = 340.0
+
+[node name="FeedbackLabel" type="Label" parent="FeedbackCanvas/FeedbackPanel"]
+layout_mode = 2
+horizontal_alignment = 1

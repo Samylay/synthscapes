@@ -6,7 +6,7 @@ const SPRINT_SPEED := 140.0
 var _current_interactable: Node = null
 var _input_locked: bool = false
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var _anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera: Camera2D = $Camera2D
 @onready var prompt_label: Label = $PromptCanvas/PromptLabel
 
@@ -39,6 +39,7 @@ func _ready() -> void:
 		_footstep_player.stream = randomizer
 
 	EventBus.input_lock_changed.connect(_on_input_lock_changed)
+	_anim.play("idle")
 
 
 func _physics_process(_delta: float) -> void:
@@ -61,6 +62,8 @@ func _physics_process(_delta: float) -> void:
 
 	move_and_slide()
 
+	_update_animation()
+
 	if velocity != Vector2.ZERO:
 		if _footstep_timer.is_stopped():
 			_footstep_timer.start()
@@ -79,7 +82,6 @@ func set_interactable(node: Node) -> void:
 	_current_interactable = node
 	prompt_label.text = node.interaction_label if "interaction_label" in node else "Press E"
 	prompt_label.visible = true
-	# Also update HUD if available
 	var hud := get_tree().get_first_node_in_group("hud")
 	if hud:
 		hud.show_prompt(prompt_label.text)
@@ -93,11 +95,26 @@ func clear_interactable() -> void:
 		hud.hide_prompt()
 
 
+func play_hurt() -> void:
+	_anim.play("hurt")
+
+
+func _update_animation() -> void:
+	if _anim.animation == &"hurt" and _anim.is_playing():
+		return
+	if velocity != Vector2.ZERO:
+		_anim.play("walk")
+		_anim.flip_h = velocity.x < 0
+	else:
+		_anim.play("idle")
+
+
 func _on_input_lock_changed(locked: bool) -> void:
 	_input_locked = locked
 	if locked:
 		velocity = Vector2.ZERO
 		prompt_label.visible = false
+		_anim.play("idle")
 
 
 func _play_footstep() -> void:
